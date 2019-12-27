@@ -75,6 +75,23 @@ curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/blind/50
 ```
 
+### List all groups
+```shell
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups
+```
+
+### Get single group
+Use the `id` property of the group
+
+```shell
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077
+```
+
+### Get group devices
+```shell
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/devices
+```
+
 ### Get gateway information
 ```shell
 curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/gateway

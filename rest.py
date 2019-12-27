@@ -104,12 +104,12 @@ def gateway(request, methods=['GET']):
 
     return json.dumps({
         'id': gateway_info.id,
-        'ntp_server': gateway_info.ntp_server,
-        'firmware_version': gateway_info.firmware_version,
-        'current_time': str(gateway_info.current_time),
-        'current_time_iso8601': gateway_info.current_time_iso8601,
-        'first_setup': str(gateway_info.first_setup),
-        'homekit_id': gateway_info.homekit_id
+        'ntpServer': gateway_info.ntp_server,
+        'firmwareVersion': gateway_info.firmware_version,
+        'currentTime': str(gateway_info.current_time),
+        'currentTimeIso8601': gateway_info.current_time_iso8601,
+        'firstSetup': str(gateway_info.first_setup),
+        'homekitId': gateway_info.homekit_id
     })
 
 @route('/devices')
@@ -164,6 +164,53 @@ def device_dimmer(request, id, state, methods=['PUT']):
         api(state_command)
     else:
         raise Exception('Invalid device type for this operation')
+
+def get_group_item(group):
+    item = {
+        'id': group.id,
+        'name': group.name,
+        'deviceIds': group.member_ids
+    }
+    return item
+
+@route('/groups')
+def groups(request, methods=['GET']):
+    (gateway, api) = get_gateway_api(request)
+
+    groups_command = gateway.get_groups()
+    groups_commands = api(groups_command)
+    groups = api(groups_commands)
+
+    items = []
+    for group in groups:
+        item = get_group_item(group)
+        items.append(item)
+    return json.dumps(items)
+
+@route('/groups/<int:id>')
+def group(request, id, methods=['GET']):
+    (gateway, api) = get_gateway_api(request)
+
+    group_command = gateway.get_group(id)
+    group = api(group_command)
+
+    item = get_group_item(group)
+    return json.dumps(item)
+
+@route('/groups/<int:id>/devices')
+def group_devices(request, id, methods=['GET']):
+    (gateway, api) = get_gateway_api(request)
+
+    group_command = gateway.get_group(id)
+    group = api(group_command)
+
+    items = []
+    for member_id in group.member_ids:
+        device_command = gateway.get_device(member_id)
+        device = api(device_command)
+        item = get_device_item(device)
+        items.append(item)
+    return json.dumps(items)
 
 if __name__ == '__main__':
     port = 80
