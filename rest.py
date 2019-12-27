@@ -61,26 +61,78 @@ def get_gateway_api(request):
 
     return (gateway, api)
 
-@route('/lights')
-def lights(request, methods=['GET']):
+@route('/devices')
+def devices(request, methods=['GET']):
     (gateway, api) = get_gateway_api(request)
 
     devices_command = gateway.get_devices()
     devices_commands = api(devices_command)
     devices = api(devices_commands)
 
-    lights = []
-    for index, device in enumerate(devices):
-        if device.has_light_control:
-            light = {
-                'id': index,
-                'name': device.name,
-                'state': device.light_control.lights[0].state,
-                'dimmer': device.light_control.lights[0].dimmer
+    items = []
+    for device in devices:
+        item = {
+            'id': device.id,
+            'name': device.name,
+            'type': 'unknown',
+            'typeId': device.application_type,
+            'reachable': device.reachable,
+            'lastSeen': str(device.last_seen),
+            'info': {
+                'manufacturer': device.device_info.manufacturer,
+                'modelNumber': device.device_info.model_number,
+                'serial': device.device_info.serial,
+                'firmwareVersion': device.device_info.firmware_version,
+                'powerSource': device.device_info.power_source_str,
+                'powerSourceId': device.device_info.power_source,
+                'batteryLevel': device.device_info.battery_level
             }
-            lights.append(light)
+        }
 
-    return json.dumps(lights)
+        if device.has_light_control:
+            item['type'] = 'light'
+            item['state'] = device.light_control.lights[0].state
+            item['dimmer'] = device.light_control.lights[0].dimmer
+
+        if device.has_blind_control:
+            item['type'] = 'blind'
+            item['state'] = device.blind_control.blinds[0].current_cover_position
+
+        if device.has_socket_control:
+            item['type'] = 'socket'
+            item['state'] = device.socket_control.sockets[0].state
+
+        if device.has_signal_repeater_control:
+            item['type'] = 'repeater'
+
+        items.append(item)
+    return json.dumps(items)
+
+@route('/devices/<int:id>/state/<int:state>')
+def device_dimmer(request, id, state, methods=['PUT']):
+    (gateway, api) = get_gateway_api(request)
+
+    device_command = gateway.get_device(id)
+    device = api(device_command)
+
+    if device.has_light_control or device.has_socket_control:
+        state_command = device.light_control.set_state(state != 0)
+        api(state_command)
+    else:
+        raise Exception('Invalid device type for this operation')
+
+@route('/devices/<int:id>/dimmer/<int:dimmer>')
+def device_state(request, id, dimmer, methods=['PUT']):
+    (gateway, api) = get_gateway_api(request)
+
+    device_command = gateway.get_device(id)
+    device = api(device_command)
+
+    if device.has_light_control or device.has_socket_control:
+        dim_command = device.light_control.set_dimmer(dimmer)
+        api(dim_command)
+    else:
+        raise Exception('Invalid device type for this operation')
 
 if __name__ == '__main__':
     port = 80

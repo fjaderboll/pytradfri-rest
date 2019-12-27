@@ -1,5 +1,5 @@
 # IKEA Trådfri - REST API
-This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) project and adds a REST API for simpler use.
+This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) project and adds a REST API for simpler usage.
 
 ## Installation
 ```shell
