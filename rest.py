@@ -19,17 +19,6 @@ import base64
 
 from klein import run, route
 
-"""
-Request POST body:
-{
-    "host": "192.168.0.1",
-    "code": "aabbccddeeff1234"
-}
-Response body:
-{
-  "auth": "eyJob3N0IjogIjE4Mi4xNi4xLjkuLCAiaWRlbnRpdHkiOiAiY2Q1ZTVhZGIzNWZhNDAwNjayYzAzZjM0NjgyYTE3YTgiLCAicHNrIjogIkI4Umt1ak1zNDhxTjNTZ1UifQ=="
-}
-"""
 @route('/login')
 def login(request, methods=['POST']):
     raw_data = request.content.read().decode("utf-8")
@@ -62,6 +51,50 @@ def get_gateway_api(request):
 
     return (gateway, api)
 
+def get_device(request, id):
+    (gateway, api) = get_gateway_api(request)
+
+    device_command = gateway.get_device(id)
+    device = api(device_command)
+    return device
+
+def get_device_item(device):
+    item = {
+        'id': device.id,
+        'name': device.name,
+        'type': 'unknown',
+        'typeId': device.application_type,
+        'reachable': device.reachable,
+        'lastSeen': str(device.last_seen),
+        'info': {
+            'manufacturer': device.device_info.manufacturer,
+            'modelNumber': device.device_info.model_number,
+            'serial': device.device_info.serial,
+            'firmwareVersion': device.device_info.firmware_version,
+            'powerSource': device.device_info.power_source_str,
+            'powerSourceId': device.device_info.power_source,
+            'batteryLevel': device.device_info.battery_level
+        }
+    }
+
+    if device.has_light_control:
+        item['type'] = 'light'
+        item['state'] = device.light_control.lights[0].state
+        item['dimmer'] = device.light_control.lights[0].dimmer
+
+    if device.has_blind_control:
+        item['type'] = 'blind'
+        item['state'] = device.blind_control.blinds[0].current_cover_position
+
+    if device.has_socket_control:
+        item['type'] = 'socket'
+        item['state'] = device.socket_control.sockets[0].state
+
+    if device.has_signal_repeater_control:
+        item['type'] = 'repeater'
+
+    return item
+
 @route('/devices')
 def devices(request, methods=['GET']):
     (gateway, api) = get_gateway_api(request)
@@ -72,49 +105,19 @@ def devices(request, methods=['GET']):
 
     items = []
     for device in devices:
-        item = {
-            'id': device.id,
-            'name': device.name,
-            'type': 'unknown',
-            'typeId': device.application_type,
-            'reachable': device.reachable,
-            'lastSeen': str(device.last_seen),
-            'info': {
-                'manufacturer': device.device_info.manufacturer,
-                'modelNumber': device.device_info.model_number,
-                'serial': device.device_info.serial,
-                'firmwareVersion': device.device_info.firmware_version,
-                'powerSource': device.device_info.power_source_str,
-                'powerSourceId': device.device_info.power_source,
-                'batteryLevel': device.device_info.battery_level
-            }
-        }
-
-        if device.has_light_control:
-            item['type'] = 'light'
-            item['state'] = device.light_control.lights[0].state
-            item['dimmer'] = device.light_control.lights[0].dimmer
-
-        if device.has_blind_control:
-            item['type'] = 'blind'
-            item['state'] = device.blind_control.blinds[0].current_cover_position
-
-        if device.has_socket_control:
-            item['type'] = 'socket'
-            item['state'] = device.socket_control.sockets[0].state
-
-        if device.has_signal_repeater_control:
-            item['type'] = 'repeater'
-
+        item = get_device_item(device)
         items.append(item)
     return json.dumps(items)
 
+@route('/devices/<int:id>')
+def device(request, id, methods=['GET']):
+    device = get_device(request, id)
+    item = get_device_item(device)
+    return json.dumps(item)
+
 @route('/devices/<int:id>/state/<int:state>')
 def device_dimmer(request, id, state, methods=['PUT']):
-    (gateway, api) = get_gateway_api(request)
-
-    device_command = gateway.get_device(id)
-    device = api(device_command)
+    device = get_device(request, id)
 
     if device.has_light_control:
         state_command = device.light_control.set_state(state != 0)
@@ -127,10 +130,7 @@ def device_dimmer(request, id, state, methods=['PUT']):
 
 @route('/devices/<int:id>/dimmer/<int:dimmer>')
 def device_state(request, id, dimmer, methods=['PUT']):
-    (gateway, api) = get_gateway_api(request)
-
-    device_command = gateway.get_device(id)
-    device = api(device_command)
+    device = get_device(request, id)
 
     if device.has_light_control:
         dim_command = device.light_control.set_dimmer(dimmer)
