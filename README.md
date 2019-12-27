@@ -29,10 +29,7 @@ First you'll need to login providing the IP of the gateway and the security code
 curl --request POST \
   --url http://localhost:2080/login \
   --header 'content-type: application/json' \
-  --data '{
-    "host": "192.168.0.7",
-    "code": "0RfPG338tTwBthto"
-}'
+  --data '{ "host": "192.168.0.7", "code": "0RfPG338tTwBthto" }'
 ```
 
 The response will contain a authorization token:
@@ -47,25 +44,26 @@ authorization: Bearer eyJob3N0IjogIjE3Mi4...
 
 ### List all devices
 ```shell
-curl --request GET \
-  --url http://localhost:2080/devices \
-  --header 'authorization: Bearer XXX'
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices
+```
+
+### Get single device
+Use the `id` property of the device
+
+```shell
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545
 ```
 
 ### Turn light/socket on/off
-Use the `id` of the device and state can be either `0` or `1`
+`state` can be either `0` or `1`
 
 ```shell
-curl --request PUT \
-  --url http://localhost:2080/devices/65545/state/1 \
-  --header 'authorization: Bearer XXX'
+curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/state/1
 ```
 
 ### Change light dimmer
-Use the `id` of the device and dimmer can be any value between `0` or `254`
+`dimmer` can be any value between `0` or `254`
 
 ```shell
-curl --request PUT \
-  --url http://localhost:2080/devices/65545/dimmer/254 \
-  --header 'authorization: Bearer XXX'
+curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/dimmer/254
 ```
