@@ -57,7 +57,7 @@ Use the `id` of the device and state can be either `0` or `1`
 
 ```shell
 curl --request PUT \
-  --url http://panda.avall.net:2080/devices/65545/state/1 \
+  --url http://localhost:2080/devices/65545/state/1 \
   --header 'authorization: Bearer XXX'
 ```
 
