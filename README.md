@@ -3,8 +3,8 @@ This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) proje
 
 ## Installation
 ```shell
-sudo apt install python3-klein
-sudo pip3 install pytradfri
+sudo apt install python3-klein autoconf libtool
+sudo pip3 install --upgrade pytradfri
 
 cd /tmp
 git clone https://github.com/ggravlingen/pytradfri.git

@@ -115,8 +115,11 @@ def device_dimmer(request, id, state, methods=['PUT']):
     device_command = gateway.get_device(id)
     device = api(device_command)
 
-    if device.has_light_control or device.has_socket_control:
+    if device.has_light_control:
         state_command = device.light_control.set_state(state != 0)
+        api(state_command)
+    elif device.has_socket_control:
+        state_command = device.socket_control.set_state(state != 0)
         api(state_command)
     else:
         raise Exception('Invalid device type for this operation')
@@ -128,7 +131,7 @@ def device_state(request, id, dimmer, methods=['PUT']):
     device_command = gateway.get_device(id)
     device = api(device_command)
 
-    if device.has_light_control or device.has_socket_control:
+    if device.has_light_control:
         dim_command = device.light_control.set_dimmer(dimmer)
         api(dim_command)
     else:
