@@ -74,3 +74,8 @@ curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 ```shell
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/blind/50
 ```
+
+### Get gateway information
+```shell
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/gateway
+```

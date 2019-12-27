@@ -95,6 +95,23 @@ def get_device_item(device):
 
     return item
 
+@route('/gateway')
+def gateway(request, methods=['GET']):
+    (gateway, api) = get_gateway_api(request)
+
+    gateway_command = gateway.get_gateway_info()
+    gateway_info = api(gateway_command)
+
+    return json.dumps({
+        'id': gateway_info.id,
+        'ntp_server': gateway_info.ntp_server,
+        'firmware_version': gateway_info.firmware_version,
+        'current_time': str(gateway_info.current_time),
+        'current_time_iso8601': gateway_info.current_time_iso8601,
+        'first_setup': str(gateway_info.first_setup),
+        'homekit_id': gateway_info.homekit_id
+    })
+
 @route('/devices')
 def devices(request, methods=['GET']):
     (gateway, api) = get_gateway_api(request)
