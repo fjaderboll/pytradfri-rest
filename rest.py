@@ -44,13 +44,14 @@ def login(request, methods=['POST']):
         'identity': identity,
         'psk': psk
     }
+    # TODO better/safer way of handling this information
     auth = {
-        'authentication': base64.b64encode(json.dumps(login_data).encode()).decode("utf-8")
+        'token': base64.b64encode(json.dumps(login_data).encode()).decode("utf-8")
     }
     return json.dumps(auth)
 
 def get_gateway_api(request):
-    auth = request.getHeader('Authorization')
+    auth = request.getHeader('authorization')
     token = auth.split(' ')[1]
     raw_login_data = base64.b64decode(token).decode("utf-8")
     login_data = json.loads(raw_login_data)
