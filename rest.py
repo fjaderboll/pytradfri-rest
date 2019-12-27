@@ -138,6 +138,16 @@ def device_state(request, id, dimmer, methods=['PUT']):
     else:
         raise Exception('Invalid device type for this operation')
 
+@route('/devices/<int:id>/blind/<int:state>')
+def device_dimmer(request, id, state, methods=['PUT']):
+    device = get_device(request, id)
+
+    if device.has_blind_control:
+        state_command = device.blind_control.set_state(state)
+        api(state_command)
+    else:
+        raise Exception('Invalid device type for this operation')
+
 if __name__ == '__main__':
     port = 80
     if len(sys.argv) == 2:

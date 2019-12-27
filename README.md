@@ -67,3 +67,10 @@ curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 ```shell
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/dimmer/254
 ```
+
+### Change blind position
+`blind` can be any value between `0` or `100` (I think, untested!)
+
+```shell
+curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/blind/50
+```
