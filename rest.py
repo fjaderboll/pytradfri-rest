@@ -52,7 +52,7 @@ def login(request, methods=['POST']):
 def get_gateway_api(request):
     auth = request.getHeader('Authorization')
     token = auth.split(' ')[1]
-    raw_login_data = base64.b64decode(token)
+    raw_login_data = base64.b64decode(token).decode("utf-8")
     login_data = json.loads(raw_login_data)
 
     api_factory = APIFactory(host=login_data['host'], psk_id=login_data['identity'], psk=login_data['psk'])
