@@ -56,7 +56,7 @@ def get_device(request, id):
 
     device_command = gateway.get_device(id)
     device = api(device_command)
-    return device
+    return (device, api)
 
 def get_device_item(device):
     item = {
@@ -128,13 +128,13 @@ def devices(request, methods=['GET']):
 
 @route('/devices/<int:id>')
 def device(request, id, methods=['GET']):
-    device = get_device(request, id)
+    (device, api) = get_device(request, id)
     item = get_device_item(device)
     return json.dumps(item)
 
 @route('/devices/<int:id>/state/<int:state>')
-def device_dimmer(request, id, state, methods=['PUT']):
-    device = get_device(request, id)
+def device_state(request, id, state, methods=['PUT']):
+    (device, api) = get_device(request, id)
 
     if device.has_light_control:
         state_command = device.light_control.set_state(state != 0)
@@ -146,8 +146,8 @@ def device_dimmer(request, id, state, methods=['PUT']):
         raise Exception('Invalid device type for this operation')
 
 @route('/devices/<int:id>/dimmer/<int:dimmer>')
-def device_state(request, id, dimmer, methods=['PUT']):
-    device = get_device(request, id)
+def device_dimmer(request, id, dimmer, methods=['PUT']):
+    (device, api) = get_device(request, id)
 
     if device.has_light_control:
         dim_command = device.light_control.set_dimmer(dimmer)
@@ -156,8 +156,8 @@ def device_state(request, id, dimmer, methods=['PUT']):
         raise Exception('Invalid device type for this operation')
 
 @route('/devices/<int:id>/blind/<int:state>')
-def device_dimmer(request, id, state, methods=['PUT']):
-    device = get_device(request, id)
+def device_blind(request, id, state, methods=['PUT']):
+    (device, api) = get_device(request, id)
 
     if device.has_blind_control:
         state_command = device.blind_control.set_state(state)
