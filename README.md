@@ -1,29 +1,32 @@
 # IKEA Trådfri - REST API
-This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) project and adds a REST API for simpler usage.
+This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) project and adds a REST API for simpler usage of controlling your IKEA lights.
 
-## Installation
-Tested on Raspbian (stretch) and LinuxMint (tessa)
+## Setup
+Below is tested on Raspbian (stretch) and LinuxMint (tessa), but should work in all similar environments.
 
+### Docker
+Install Docker first if you haven't:
 ```shell
-sudo apt install python3-klein autoconf libtool
-sudo pip3 install --upgrade pytradfri
-
-cd /tmp
-git clone https://github.com/ggravlingen/pytradfri.git
-cd pytradfri/script/
-sudo ./install-coap-client.sh
+sudo apt install docker-ce   # Raspbian
+sudo apt install docker.io   # other
 ```
 
-## Running
+Then run:
 ```shell
-./rest.py 2080
+./docker/build.sh      # builds the image
+./docker/run.sh 2080   # starts server at http://localhost:2080/
 ```
-This will start the REST API at http://localhost:2080/
+
+### Installation (without docker)
+```shell
+sudo ./docker/setup.sh   # installs all dependencies
+./rest.py 2080           # starts server at http://localhost:2080/
+```
 
 ## Usage
 
 ### Login
-First you'll need to login providing the IP of the gateway and the security code (written on the back):
+First you'll need to login providing the IP of the gateway and the security code (written on the back of the gateway):
 
 ```shell
 curl --request POST \
@@ -41,6 +44,7 @@ Use this in the header for all other requests:
 ```
 authorization: Bearer eyJob3N0IjogIjE3Mi4...
 ```
+This token does never expire.
 
 ### List all devices
 ```shell
