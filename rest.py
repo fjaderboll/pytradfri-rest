@@ -19,6 +19,13 @@ import base64
 
 from klein import run, route
 
+APP_TYPES = [
+    'remote',
+    'unknown', # TODO blind?
+    'light',
+    'socket'
+]
+
 @route('/login')
 def login(request, methods=['POST']):
     raw_data = request.content.read().decode("utf-8")
@@ -62,7 +69,7 @@ def get_device_item(device):
     item = {
         'id': device.id,
         'name': device.name,
-        'type': 'unknown',
+        'type': (APP_TYPES[device.application_type] if device.application_type < len(APP_TYPES) else 'unknown'),
         'typeId': device.application_type,
         'reachable': device.reachable,
         'lastSeen': str(device.last_seen),
@@ -78,20 +85,17 @@ def get_device_item(device):
     }
 
     if device.has_light_control:
-        item['type'] = 'light'
         item['state'] = device.light_control.lights[0].state
         item['dimmer'] = device.light_control.lights[0].dimmer
 
     if device.has_blind_control:
-        item['type'] = 'blind'
         item['state'] = device.blind_control.blinds[0].current_cover_position
 
     if device.has_socket_control:
-        item['type'] = 'socket'
         item['state'] = device.socket_control.sockets[0].state
 
     if device.has_signal_repeater_control:
-        item['type'] = 'repeater'
+        pass
 
     return item
 
