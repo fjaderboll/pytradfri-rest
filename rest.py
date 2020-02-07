@@ -65,6 +65,14 @@ def get_device(request, id):
     device = api(device_command)
     return (device, api)
 
+def get_group(request, id):
+    (gateway, api) = get_gateway_api(request)
+
+    group_command = gateway.get_group(id)
+    group = api(group_command)
+
+    return (group, api)
+
 def get_device_item(device):
     item = {
         'id': device.id,
@@ -193,10 +201,7 @@ def groups(request, methods=['GET']):
 
 @route('/groups/<int:id>')
 def group(request, id, methods=['GET']):
-    (gateway, api) = get_gateway_api(request)
-
-    group_command = gateway.get_group(id)
-    group = api(group_command)
+    (group, api) = get_group(request, id)
 
     item = get_group_item(group)
     return json.dumps(item)
@@ -215,6 +220,20 @@ def group_devices(request, id, methods=['GET']):
         item = get_device_item(device)
         items.append(item)
     return json.dumps(items)
+
+@route('/groups/<int:id>/state/<int:state>')
+def group_state(request, id, state, methods=['PUT']):
+    (group, api) = get_group(request, id)
+
+    state_command = group.set_state(state != 0)
+    api(state_command)
+
+@route('/groups/<int:id>/dimmer/<int:dimmer>')
+def group_dimmer(request, id, dimmer, methods=['PUT']):
+    (group, api) = get_group(request, id)
+
+    dim_command = group.set_dimmer(dimmer)
+    api(dim_command)
 
 if __name__ == '__main__':
     port = 80

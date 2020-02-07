@@ -46,16 +46,18 @@ authorization: Bearer eyJob3N0IjogIjE3Mi4...
 ```
 This token does never expire.
 
-### List all devices
+### List all devices/groups
 ```shell
 curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups
 ```
 
-### Get single device
-Use the `id` property of the device
+### Get single device/group
+Use the `id` property of the device/group from above response
 
 ```shell
 curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545
+curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077
 ```
 
 ### Turn light/socket on/off
@@ -63,6 +65,7 @@ curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 
 ```shell
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/state/1
+curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/state/0
 ```
 
 ### Change light dimmer
@@ -70,6 +73,7 @@ curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 
 ```shell
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/dimmer/254
+curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/dimmer/50
 ```
 
 ### Change blind position
@@ -79,19 +83,7 @@ curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/6
 curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/blind/50
 ```
 
-### List all groups
-```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups
-```
-
-### Get single group
-Use the `id` property of the group
-
-```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077
-```
-
-### Get group devices
+### Get group devices with details
 ```shell
 curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/devices
 ```
