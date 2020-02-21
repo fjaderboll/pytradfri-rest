@@ -37,14 +37,14 @@ curl --request POST \
 
 The response will contain a authorization token:
 ```json
-{ "token": "eyJob3N0IjogIjE3Mi4..." }
+{ "token": "ZXCWeWiPfYhki..." }
 ```
 
 Use this in the header for all other requests, like this:
 
 ```shell
-curl -X GET --header 'authorization: Bearer eyJob3N0IjogIjE3Mi4...' http://localhost:2080/devices
-curl -X PUT --header 'authorization: Bearer eyJob3N0IjogIjE3Mi4...' http://localhost:2080/devices/65545/state/1
+curl -X GET --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices
+curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices/65545/state/1
 ```
 
 This token does never expire.

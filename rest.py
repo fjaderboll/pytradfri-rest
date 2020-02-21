@@ -25,6 +25,28 @@ APP_TYPES = [
     'light',
     'socket'
 ]
+CRYPT_KEY = '49dK7YOW6QgIPb9w'
+
+def encrypt(string, key):
+    encoded_chars = []
+    for i in range(len(string)):
+        key_c = key[i % len(key)]
+        encoded_c = chr(ord(string[i]) + ord(key_c) % 256)
+        encoded_chars.append(encoded_c)
+    encoded_string = ''.join(encoded_chars)
+    encoded_string = encoded_string.encode('latin')
+    return base64.urlsafe_b64encode(encoded_string).decode("utf-8").rstrip('=')
+
+def decrypt(string, key):
+    string = base64.urlsafe_b64decode(string + '===')
+    string = string.decode('latin')
+    encoded_chars = []
+    for i in range(len(string)):
+        key_c = key[i % len(key)]
+        encoded_c = chr((ord(string[i]) - ord(key_c) + 256) % 256)
+        encoded_chars.append(encoded_c)
+    encoded_string = ''.join(encoded_chars)
+    return encoded_string
 
 @route('/login')
 def login(request, methods=['POST']):
@@ -35,28 +57,26 @@ def login(request, methods=['POST']):
     api_factory = APIFactory(host=data['host'], psk_id=identity)
     psk = api_factory.generate_psk(data['code'])
 
-    login_data = {
-        'host': data['host'],
-        'identity': identity,
-        'psk': psk
-    }
-    # TODO better/safer way of handling this information
+    login_data = data['host'] + ',' + identity + ',' + psk
     auth = {
-        'token': base64.b64encode(json.dumps(login_data).encode()).decode("utf-8")
+        'token': encrypt(login_data, CRYPT_KEY)
     }
     return json.dumps(auth)
 
 def get_gateway_api(request):
-    auth = request.getHeader('authorization')
-    token = auth.split(' ')[1]
-    raw_login_data = base64.b64decode(token).decode("utf-8")
-    login_data = json.loads(raw_login_data)
+    try:
+        auth = request.getHeader('authorization')
+        token = auth.split(' ')[1]
+        login_data = decrypt(token, CRYPT_KEY)
+        (host, identity, psk) = login_data.split(',')
 
-    api_factory = APIFactory(host=login_data['host'], psk_id=login_data['identity'], psk=login_data['psk'])
-    api = api_factory.request
-    gateway = Gateway()
+        api_factory = APIFactory(host=host, psk_id=identity, psk=psk)
+        api = api_factory.request
+        gateway = Gateway()
 
-    return (gateway, api)
+        return (gateway, api)
+    except:
+        raise Exception("Not authorized") # TODO better error handling, should throw 403
 
 def get_device(request, id):
     (gateway, api) = get_gateway_api(request)
