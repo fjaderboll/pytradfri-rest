@@ -157,15 +157,24 @@ def device_state(request, id, state, methods=['PUT']):
     else:
         raise Exception('Invalid device type for this operation')
 
-@route('/devices/<int:id>/dimmer/<int:dimmer>')
-def device_dimmer(request, id, dimmer, methods=['PUT']):
+@route('/devices/<int:id>/dimmer/<int:dimmer>/transition/<float:transition>')
+def device_dimmer_transition(request, id, dimmer, transition, methods=['PUT']):
     (device, api) = get_device(request, id)
 
     if device.has_light_control:
-        dim_command = device.light_control.set_dimmer(dimmer)
+        transition_time = None if transition is None else int(transition*10)
+        dim_command = device.light_control.set_dimmer(dimmer, transition_time=transition_time)
         api(dim_command)
     else:
         raise Exception('Invalid device type for this operation')
+
+@route('/devices/<int:id>/dimmer/<int:dimmer>/transition/<int:transition>')
+def device_dimmer_transition_int(request, id, dimmer, transition, methods=['PUT']):
+    device_dimmer_transition(request, id, dimmer, transition)
+
+@route('/devices/<int:id>/dimmer/<int:dimmer>')
+def device_dimmer(request, id, dimmer, methods=['PUT']):
+    device_dimmer_transition(request, id, dimmer, None)
 
 @route('/devices/<int:id>/blind/<int:state>')
 def device_blind(request, id, state, methods=['PUT']):
@@ -228,12 +237,21 @@ def group_state(request, id, state, methods=['PUT']):
     state_command = group.set_state(state != 0)
     api(state_command)
 
-@route('/groups/<int:id>/dimmer/<int:dimmer>')
-def group_dimmer(request, id, dimmer, methods=['PUT']):
+@route('/groups/<int:id>/dimmer/<int:dimmer>/transition/<float:transition>')
+def group_dimmer_transition(request, id, dimmer, transition, methods=['PUT']):
     (group, api) = get_group(request, id)
 
-    dim_command = group.set_dimmer(dimmer)
+    transition_time = None if transition is None else int(transition*10)
+    dim_command = group.set_dimmer(dimmer, transition_time=transition_time)
     api(dim_command)
+
+@route('/groups/<int:id>/dimmer/<int:dimmer>/transition/<int:transition>')
+def group_dimmer_transition_int(request, id, dimmer, transition, methods=['PUT']):
+    group_dimmer_transition(request, id, dimmer, transition)
+
+@route('/groups/<int:id>/dimmer/<int:dimmer>')
+def group_dimmer(request, id, dimmer, methods=['PUT']):
+    group_dimmer_transition(request, id, dimmer, None)
 
 if __name__ == '__main__':
     port = 80

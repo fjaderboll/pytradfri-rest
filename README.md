@@ -40,55 +40,62 @@ The response will contain a authorization token:
 { "token": "eyJob3N0IjogIjE3Mi4..." }
 ```
 
-Use this in the header for all other requests:
+Use this in the header for all other requests, like this:
+
+```shell
+curl -X GET --header 'authorization: Bearer eyJob3N0IjogIjE3Mi4...' http://localhost:2080/devices
+curl -X PUT --header 'authorization: Bearer eyJob3N0IjogIjE3Mi4...' http://localhost:2080/devices/65545/state/1
 ```
-authorization: Bearer eyJob3N0IjogIjE3Mi4...
-```
+
 This token does never expire.
 
 ### List all devices/groups
 ```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups
+GET /devices
+GET /groups
 ```
 
 ### Get single device/group
 Use the `id` property of the device/group from above response
 
 ```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077
+GET /devices/65545
+GET /groups/131077
 ```
 
 ### Turn light/socket on/off
-`state` can be either `0` or `1`
+**state** can be either `0` or `1`. When used on a group it's applied to all applicable devices.
 
 ```shell
-curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/state/1
-curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/state/0
+PUT /devices/65545/state/1
+PUT /groups/131077/state/0
 ```
 
 ### Change light dimmer
-`dimmer` can be any value between `0` or `254`
+**dimmer** can be any value between `0` or `254`. When used on a group it's applied to all applicable devices.
+It's also possible to add a transition time. **transition** is a positive decimal number in seconds.
 
 ```shell
-curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/dimmer/254
-curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/dimmer/50
+PUT /devices/65545/dimmer/254
+PUT /groups/131077/dimmer/50
+
+PUT /devices/65545/dimmer/254/transition/0.75
+PUT /groups/131077/dimmer/50/transition/3
 ```
 
 ### Change blind position
-`blind` can be any value between `0` or `100` (I think, untested!)
+**blind** can be any value between `0` or `100` (I think, untested!)
 
 ```shell
-curl -X PUT --header 'authorization: Bearer XXX' http://localhost:2080/devices/65545/blind/50
+PUT /devices/65545/blind/50
 ```
 
 ### Get group devices with details
 ```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/groups/131077/devices
+GET /groups/131077/devices
 ```
 
 ### Get gateway information
 ```shell
-curl -X GET --header 'authorization: Bearer XXX' http://localhost:2080/gateway
+GET /gateway
 ```
