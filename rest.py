@@ -25,8 +25,9 @@ APP_TYPES = [
     'light',
     'socket'
 ]
-CRYPT_KEY = '49dK7YOW6QgIPb9w'
+CRYPT_KEY = '49dK7YOW6QgIPb9w' # TODO add option for custom key
 
+# Vigenère cipher + base64
 def encrypt(string, key):
     encoded_chars = []
     for i in range(len(string)):
@@ -58,6 +59,7 @@ def login(request, methods=['POST']):
     psk = api_factory.generate_psk(data['code'])
 
     login_data = data['host'] + ',' + identity + ',' + psk
+    # TODO add option for none static tokens and sessions
     auth = {
         'token': encrypt(login_data, CRYPT_KEY)
     }
