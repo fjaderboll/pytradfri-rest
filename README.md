@@ -1,10 +1,10 @@
 # IKEA Trådfri - REST API
-This is built on the [pytradfri](https://github.com/ggravlingen/pytradfri) project and adds a REST API for simpler usage of controlling your IKEA lights.
+This is built on the [pytradfri](https://github.com/home-assistant-libs/pytradfri) project and adds a REST API for simpler usage of controlling your IKEA lights.
 
 ## Setup
 Below is tested on Raspbian (stretch) and LinuxMint (tessa), but should work in all similar environments.
 
-### Docker
+### With docker
 Install Docker first if you haven't:
 ```shell
 sudo apt install docker-ce   # Raspbian
@@ -17,10 +17,20 @@ Then run:
 ./docker/run.sh 2080   # starts server at http://localhost:2080/
 ```
 
-### Installation (without docker)
+### Without docker
+First time only:
 ```shell
-sudo ./docker/setup.sh   # installs all dependencies
-./rest.py 2080           # starts server at http://localhost:2080/
+sudo ./docker/install-coap-client.sh
+sudo apt install python3-venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+Run:
+```shell
+source .venv/bin/activate
+./rest.py 2080         # starts server at http://localhost:2080/
 ```
 
 ## Usage

@@ -1,1 +1,2 @@
-pytradfri
+pytradfri==7.0.1
+klein==20.6.0
