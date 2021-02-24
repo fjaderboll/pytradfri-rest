@@ -17,7 +17,7 @@ Then run:
 ./docker/run.sh 2080   # starts server at http://localhost:2080/
 ```
 
-### Without docker
+### Without docker (development)
 First time only:
 ```shell
 sudo ./docker/install-coap-client.sh
@@ -30,17 +30,20 @@ pip3 install -r requirements.txt
 Run:
 ```shell
 source .venv/bin/activate
-./rest.py 2080         # starts server at http://localhost:2080/
+./rest/rest.py 2080    # start server at http://localhost:2080/
 ```
 
 ## Usage
+Navigate to [http://localhost:2080/](http://localhost:2080/) to view the Swagger UI and all available
+endpoints.
 
 ### Login
-First you'll need to login providing the IP of the gateway and the security code (written on the back of the gateway):
+First you'll need to login providing the IP of the gateway and the security
+code (written on the back of the gateway):
 
 ```shell
 curl --request POST \
-  --url http://localhost:2080/login \
+  --url http://localhost:2080/gateway/login \
   --header 'content-type: application/json' \
   --data '{ "host": "192.168.0.7", "code": "0RfPG338tTwBthto" }'
 ```
@@ -59,53 +62,20 @@ curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2
 
 This token does never expire.
 
-### List all devices/groups
+### Examples
 ```shell
-GET /devices
-GET /groups
+GET /devices                 # retrieve all devices
+GET /groups                  # retrieve all groups
+GET /devices/65545           # get single device information
+PUT /devices/65545/state/1   # turn device on
+PUT /devices/65545/state/0   # turn device off
+PUT /groups/131077/dimmer/50 # set all lamps in group to dimmer value 50
 ```
 
-### Get single device/group
-Use the `id` property of the device/group from above response
+# TODO
 
-```shell
-GET /devices/65545
-GET /groups/131077
-```
-
-### Turn light/socket on/off
-**state** can be either `0` or `1`. When used on a group it's applied to all applicable devices.
-
-```shell
-PUT /devices/65545/state/1
-PUT /groups/131077/state/0
-```
-
-### Change light dimmer
-**dimmer** can be any value between `0` or `254`. When used on a group it's applied to all applicable devices.
-It's also possible to add a transition time. **transition** is a positive decimal number in seconds.
-
-```shell
-PUT /devices/65545/dimmer/254
-PUT /groups/131077/dimmer/50
-
-PUT /devices/65545/dimmer/254/transition/0.75
-PUT /groups/131077/dimmer/50/transition/3
-```
-
-### Change blind position
-**blind** can be any value between `0` or `100` (I think, untested!)
-
-```shell
-PUT /devices/65545/blind/50
-```
-
-### Get group devices with details
-```shell
-GET /groups/131077/devices
-```
-
-### Get gateway information
-```shell
-GET /gateway
-```
+* Annotate all methods for the Swagger doc
+* Proper error HTTP codes
+* Add option for none static tokens and sessions
+* Create set group blind endpoint
+* Remove `Werkzeug==0.16.1` from `requirements.txt` once compile bug in newer version is fixed

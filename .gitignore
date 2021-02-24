@@ -1,2 +1,3 @@
-.venv
-docker/tmp
+/.venv
+/docker/tmp
+__pycache__
