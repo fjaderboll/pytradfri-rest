@@ -151,8 +151,9 @@ def set_device_dimmer(id, dimmer, transition):
     (device, api) = get_device_api(id)
 
     if device.has_light_control:
+        dim_value = int(dimmer/100.0*254)
         transition_time = None if transition is None else int(transition*10)
-        dim_command = device.light_control.set_dimmer(dimmer, transition_time=transition_time)
+        dim_command = device.light_control.set_dimmer(dim_value, transition_time=transition_time)
         api(dim_command)
     else:
         abort(400, 'Invalid device type for this operation')
@@ -206,6 +207,7 @@ def set_group_state(id, state):
 def set_group_dimmer(id, dimmer, transition):
     (group, api) = get_group_api(id)
 
+    dim_value = int(dimmer/100.0*254)
     transition_time = None if transition is None else int(transition*10)
-    dim_command = group.set_dimmer(dimmer, transition_time=transition_time)
+    dim_command = group.set_dimmer(dim_value, transition_time=transition_time)
     api(dim_command)
