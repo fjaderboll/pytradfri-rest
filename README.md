@@ -1,5 +1,16 @@
 # IKEA Trådfri - REST API
-This is built on the [pytradfri](https://github.com/home-assistant-libs/pytradfri) project and adds a REST API for simpler usage of controlling your IKEA lights.
+This is built on the [pytradfri](https://github.com/home-assistant-libs/pytradfri)
+project and adds a REST API for simpler usage of controlling your IKEA lights.
+
+## Examples
+```shell
+GET /devices                 # retrieve all devices
+GET /groups                  # retrieve all groups
+GET /devices/65545           # get single device information
+PUT /devices/65545/state/1   # turn device on
+PUT /devices/65545/state/0   # turn device off
+PUT /groups/131077/dimmer/60 # dim all lamps in group to 60%
+```
 
 ## Setup
 Below is tested on Raspbian (stretch) and LinuxMint (tessa), but should work in all similar environments.
@@ -34,8 +45,8 @@ source .venv/bin/activate
 ```
 
 ## Usage
-Navigate to [http://localhost:2080/](http://localhost:2080/) to view the Swagger UI and all available
-endpoints.
+Navigate to [http://localhost:2080/](http://localhost:2080/) to view the
+**Swagger UI** and all available endpoints.
 
 ### Login
 First you'll need to login providing the IP of the gateway and the security
@@ -62,20 +73,9 @@ curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2
 
 This token does never expire.
 
-### Examples
-```shell
-GET /devices                 # retrieve all devices
-GET /groups                  # retrieve all groups
-GET /devices/65545           # get single device information
-PUT /devices/65545/state/1   # turn device on
-PUT /devices/65545/state/0   # turn device off
-PUT /groups/131077/dimmer/50 # set all lamps in group to dimmer value 50
-```
-
 # TODO
 
-* Annotate all methods for the Swagger doc
-* Proper error HTTP codes
+* Add support for changing colors
 * Add option for none static tokens and sessions
 * Create set group blind endpoint
 * Remove `Werkzeug==0.16.1` from `requirements.txt` once compile bug in newer version is fixed

@@ -3,7 +3,7 @@ from flask import request, abort
 
 from pytradfri import Gateway
 from pytradfri.api.libcoap_api import APIFactory
-from pytradfri.error import PytradfriError
+from pytradfri.error import PytradfriError, RequestTimeout
 from pytradfri.util import load_json, save_json
 import uuid
 
@@ -29,7 +29,7 @@ def get_gateway_api():
 
         return (gateway, api)
     except:
-        raise Exception("Not authorized") # TODO better error handling, should throw 403
+        abort(401, 'Not authorized')
 
 def get_device_api(id):
     (gateway, api) = get_gateway_api()
@@ -95,7 +95,10 @@ def get_group_item(group):
 def login(data):
     identity = uuid.uuid4().hex
     api_factory = APIFactory(host=data['host'], psk_id=identity)
-    psk = api_factory.generate_psk(data['code'])
+    try:
+        psk = api_factory.generate_psk(data['code'])
+    except RequestTimeout:
+        abort(401, 'Unable to complete authentication')
 
     login_data = data['host'] + ',' + identity + ',' + psk
     return {
