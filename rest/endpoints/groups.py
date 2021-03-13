@@ -46,6 +46,7 @@ class GroupState(Resource):
 @ns.param('id', 'Group id, eg 131085')
 class GroupDimmerTransition(Resource):
     @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
     @ns.response(404, 'Unknown group')
     def put(self, id, dimmer, transition):
         tradfri.set_group_dimmer(id, dimmer, transition)
@@ -56,6 +57,7 @@ class GroupDimmerTransition(Resource):
 @ns.param('id', 'Group id, eg 131085')
 class GroupDimmer(Resource):
     @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
     @ns.response(404, 'Unknown group')
     def put(self, id, dimmer):
         tradfri.set_group_dimmer(id, dimmer, None)
@@ -81,4 +83,28 @@ class GroupDimmer(Resource):
     @ns.response(404, 'Unknown group')
     def put(self, id, color):
         tradfri.set_group_color(id, color, None)
+        return None, 204
+
+@ns.route('/<int:id>/colortemp/<int:colortemp>/transition/<float:transition>')
+@ns.route('/<int:id>/colortemp/<int:colortemp>/transition/<int:transition>')
+@ns.param('transition', 'Transition time in seconds, decimals allowed')
+@ns.param('colortemp', 'Color temperature in percent, 0 for warm and 100 for white')
+@ns.param('id', 'Group id, eg 131085')
+class GroupDimmerTransition(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
+    @ns.response(404, 'Unknown group')
+    def put(self, id, colortemp, transition):
+        tradfri.set_group_colortemp(id, colortemp, transition)
+        return None, 204
+
+@ns.route('/<int:id>/colortemp/<int:colortemp>')
+@ns.param('colortemp', 'Color temperature in percent, 0 for warm and 100 for white')
+@ns.param('id', 'Group id, eg 131085')
+class GroupDimmer(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
+    @ns.response(404, 'Unknown group')
+    def put(self, id, colortemp):
+        tradfri.set_group_colortemp(id, colortemp, None)
         return None, 204

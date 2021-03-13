@@ -78,6 +78,30 @@ class DeviceColor(Resource):
         tradfri.set_device_color(id, color, None)
         return None, 204
 
+@ns.route('/<int:id>/colortemp/<int:colortemp>/transition/<float:transition>')
+@ns.route('/<int:id>/colortemp/<int:colortemp>/transition/<int:transition>')
+@ns.param('transition', 'Transition time in seconds, eg 2.5')
+@ns.param('colortemp', 'Color temperature in percent, 0 for warm and 100 for white')
+@ns.param('id', 'Device id, eg 65539')
+class DeviceColortempTransition(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
+    @ns.response(404, 'Unknown device')
+    def put(self, id, colortemp, transition):
+        tradfri.set_device_colortemp(id, colortemp, transition)
+        return None, 204
+
+@ns.route('/<int:id>/colortemp/<int:colortemp>')
+@ns.param('colortemp', 'Color temperature in percent, 0 for warm and 100 for white')
+@ns.param('id', 'Device id, eg 65539')
+class DeviceColortemp(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(400, 'Bad request')
+    @ns.response(404, 'Unknown device')
+    def put(self, id, colortemp):
+        tradfri.set_device_colortemp(id, colortemp, None)
+        return None, 204
+
 @ns.route('/<int:id>/blind/<int:state>')
 @ns.param('id', 'Device id, eg 65539')
 class DeviceBlind(Resource):

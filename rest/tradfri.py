@@ -2,6 +2,7 @@
 from flask import request, abort
 
 from pytradfri import Gateway
+from pytradfri import const
 from pytradfri.api.libcoap_api import APIFactory
 from pytradfri.error import PytradfriError, RequestTimeout
 from pytradfri.util import load_json, save_json
@@ -143,8 +144,21 @@ def get_device(id):
     (device, api) = get_device_api(id)
     return get_device_item(device)
 
-def get_transition_time(transition):
+def get_transition_value(transition):
     return None if transition is None else int(transition*10)
+
+def get_dimmer_value(dimmer):
+    if dimmer < 0 or 100 < dimmer:
+        abort(400, 'Dimmer value must be between 0 and 100')
+    return int(dimmer/100.0*254)
+
+def get_colortemp_value(colortemp):
+    if colortemp < 0 or 100 < colortemp:
+        abort(400, 'Color temperature value must be between 0 and 100')
+    inverted = 100 - colortemp
+    max = 454
+    min = 250
+    return min + int((max - min) * inverted/100.0)
 
 def set_device_state(id, state):
     (device, api) = get_device_api(id)
@@ -162,12 +176,12 @@ def set_device_dimmer(id, dimmer, transition):
     (device, api) = get_device_api(id)
 
     if device.has_light_control:
-        dim_value = int(dimmer/100.0*254)
-        transition_time = get_transition_time(transition)
-        dim_command = device.light_control.set_dimmer(dim_value, transition_time=transition_time)
+        dimmer_value = get_dimmer_value(dimmer)
+        transition_value = get_transition_value(transition)
+        dim_command = device.light_control.set_dimmer(dimmer_value, transition_time=transition_value)
         api(dim_command)
     else:
-        abort(400, 'Invalid device type for this operation')
+        abort(400, 'Unsupported operation for this device')
 
 def set_device_color(id, color, transition):
     (device, api) = get_device_api(id)
@@ -176,11 +190,22 @@ def set_device_color(id, color, transition):
         abort(400, 'Invalid HEX color')
 
     if device.has_light_control and device.light_control.can_set_color:
-        transition_time = get_transition_time(transition)
-        color_command = device.light_control.set_hex_color(color, transition_time=transition_time)
+        transition_value = get_transition_value(transition)
+        color_command = device.light_control.set_hex_color(color, transition_time=transition_value)
         api(color_command)
     else:
-        abort(400, 'Invalid device type for this operation')
+        aabort(400, 'Unsupported operation for this device')
+
+def set_device_colortemp(id, colortemp, transition):
+    (device, api) = get_device_api(id)
+
+    if device.has_light_control and device.light_control.can_set_temp:
+        colortemp_value = get_colortemp_value(colortemp)
+        transition_value = get_transition_value(transition)
+        colortemp_command = device.light_control.set_color_temp(colortemp_value, transition_time=transition_value)
+        api(colortemp_command)
+    else:
+        abort(400, 'Unsupported operation for this device')
 
 def set_device_blind(id, state):
     (device, api) = get_device_api(id)
@@ -189,7 +214,7 @@ def set_device_blind(id, state):
         state_command = device.blind_control.set_state(state)
         api(state_command)
     else:
-        abort(400, 'Invalid device type for this operation')
+        abort(400, 'Unsupported operation for this device')
 
 def get_groups():
     (gateway, api) = get_gateway_api()
@@ -231,9 +256,9 @@ def set_group_state(id, state):
 def set_group_dimmer(id, dimmer, transition):
     (group, api) = get_group_api(id)
 
-    dim_value = int(dimmer/100.0*254)
-    transition_time = get_transition_time(transition)
-    dim_command = group.set_dimmer(dim_value, transition_time=transition_time)
+    dimmer_value = get_dimmer_value(dimmer)
+    transition_value = get_transition_value(transition)
+    dim_command = group.set_dimmer(dimmer_value, transition_time=transition_value)
     api(dim_command)
 
 def set_group_color(id, color, transition):
@@ -242,6 +267,14 @@ def set_group_color(id, color, transition):
     if len(color) != 6 or not all(c in string.hexdigits for c in color):
         abort(400, 'Invalid HEX color')
 
-    transition_time = get_transition_time(transition)
-    color_command = group.set_hex_color(color, transition_time=transition_time)
+    transition_value = get_transition_value(transition)
+    color_command = group.set_hex_color(color, transition_time=transition_value)
     api(color_command)
+
+def set_group_colortemp(id, colortemp, transition):
+    (group, api) = get_group_api(id)
+
+    colortemp_value = get_colortemp_value(colortemp)
+    transition_value = get_transition_value(transition)
+    colortemp_command = group.set_color_temp(colortemp_value, transition_time=transition_value)
+    api(colortemp_command)

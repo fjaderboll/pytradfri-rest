@@ -75,6 +75,5 @@ This token does never expire.
 
 # TODO
 
-* Add support for changing color temp
-* Add option for none static tokens and sessions
 * Remove `Werkzeug==0.16.1` from `requirements.txt` once compile bug in newer version is fixed
+* Add option for none static tokens and sessions
