@@ -8,7 +8,8 @@ if [ "$1" = "-c" ]; then
 fi
 
 mkdir -p tmp
-cp ../rest.py tmp/.
+cp -r ../rest tmp/.
+rm -r `find tmp/ -type d -name __pycache__`
 cp ../requirements.txt tmp/.
 docker build ${options} -t pytradfri-rest .
 rm -r tmp

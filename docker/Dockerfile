@@ -10,6 +10,6 @@ RUN pip3 install -r /tmp/requirements.txt && rm /tmp/requirements.txt
 COPY install-coap-client.sh /tmp
 RUN /tmp/install-coap-client.sh && rm /tmp/install-coap-client.sh
 
-COPY tmp/rest.py /root
+COPY tmp/rest /root/rest
 EXPOSE 80
-ENTRYPOINT exec /root/rest.py
+ENTRYPOINT exec /root/rest/rest.py
