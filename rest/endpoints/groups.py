@@ -12,7 +12,7 @@ class GroupList(Resource):
         return tradfri.get_groups()
 
 @ns.route('/<int:id>')
-@ns.param('id', 'Group id')
+@ns.param('id', 'Group id, eg 131085')
 @ns.response(404, 'Unknown group')
 class GroupGet(Resource):
     @ns.response(200, 'Success')
@@ -21,7 +21,7 @@ class GroupGet(Resource):
         return tradfri.get_group(id)
 
 @ns.route('/<int:id>/devices')
-@ns.param('id', 'Group id')
+@ns.param('id', 'Group id, eg 131085')
 @ns.response(404, 'Unknown group')
 class GroupGetDevices(Resource):
     @ns.response(200, 'Success')
@@ -31,7 +31,7 @@ class GroupGetDevices(Resource):
 
 @ns.route('/<int:id>/state/<int:state>')
 @ns.param('state', '0 for off and 1 for on')
-@ns.param('id', 'Group id')
+@ns.param('id', 'Group id, eg 131085')
 class GroupState(Resource):
     @ns.response(204, 'Success')
     @ns.response(404, 'Unknown group')
@@ -43,7 +43,7 @@ class GroupState(Resource):
 @ns.route('/<int:id>/dimmer/<int:dimmer>/transition/<int:transition>')
 @ns.param('transition', 'Transition time in seconds, decimals allowed')
 @ns.param('dimmer', 'Dim value in percent, 0 for off and 100 for max brightness')
-@ns.param('id', 'Group id')
+@ns.param('id', 'Group id, eg 131085')
 class GroupDimmerTransition(Resource):
     @ns.response(204, 'Success')
     @ns.response(404, 'Unknown group')
@@ -53,10 +53,32 @@ class GroupDimmerTransition(Resource):
 
 @ns.route('/<int:id>/dimmer/<int:dimmer>')
 @ns.param('dimmer', 'Dim value in percent, 0 for off and 100 for max brightness')
-@ns.param('id', 'Group id')
+@ns.param('id', 'Group id, eg 131085')
 class GroupDimmer(Resource):
     @ns.response(204, 'Success')
     @ns.response(404, 'Unknown group')
     def put(self, id, dimmer):
         tradfri.set_group_dimmer(id, dimmer, None)
+        return None, 204
+
+@ns.route('/<int:id>/color/<string:color>/transition/<float:transition>')
+@ns.route('/<int:id>/color/<string:color>/transition/<int:transition>')
+@ns.param('transition', 'Transition time in seconds, decimals allowed')
+@ns.param('color', 'Hex code, eg aa0055')
+@ns.param('id', 'Group id, eg 131085')
+class GroupDimmerTransition(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(404, 'Unknown group')
+    def put(self, id, color, transition):
+        tradfri.set_group_color(id, color, transition)
+        return None, 204
+
+@ns.route('/<int:id>/color/<string:color>')
+@ns.param('color', 'Hex code, eg aa0055')
+@ns.param('id', 'Group id, eg 131085')
+class GroupDimmer(Resource):
+    @ns.response(204, 'Success')
+    @ns.response(404, 'Unknown group')
+    def put(self, id, color):
+        tradfri.set_group_color(id, color, None)
         return None, 204

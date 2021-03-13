@@ -21,6 +21,7 @@ class GatewayLogin(Resource):
     @api.doc(security=None)
     @api.expect(post_fields, validate=True)
     @ns.response(200, 'Success')
+    @ns.response(400, 'Bad request')
     @ns.response(401, 'Unable to complete authentication')
     def post(self):
         return tradfri.login(api.payload)

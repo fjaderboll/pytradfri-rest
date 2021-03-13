@@ -75,7 +75,6 @@ This token does never expire.
 
 # TODO
 
-* Add support for changing colors
+* Add support for changing color temp
 * Add option for none static tokens and sessions
-* Create set group blind endpoint
 * Remove `Werkzeug==0.16.1` from `requirements.txt` once compile bug in newer version is fixed
