@@ -73,7 +73,12 @@ curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2
 
 This token does never expire.
 
-# TODO
+# Known issues
 
-* Remove `Werkzeug==0.16.1` from `requirements.txt` once compile bug in newer version is fixed
+* Setting color value just defaults to a predefined color. Might need to switch to XY color in backend.
+* Setting dimmer value on a group will not turn on lights who already have that exact value since earlier. This works on individual devices.
+* Latest version of Werkzeug library has a compile issue. Once fixed remove `Werkzeug==0.16.1` from `requirements.txt`.
+
+# Future features
+
 * Add option for none static tokens and sessions
