@@ -199,17 +199,17 @@ def set_device_color(id, color, transition):
     if len(color) != 6 or not all(c in string.hexdigits for c in color):
         abort(400, 'Invalid HEX color')
 
-    if device.has_light_control and device.light_control.can_set_color:
+    if device.has_light_control: # and device.light_control.can_set_color:
         transition_value = get_transition_value(transition)
         color_command = device.light_control.set_hex_color(color, transition_time=transition_value)
         api(color_command)
     else:
-        aabort(400, 'Unsupported operation for this device')
+        abort(400, 'Unsupported operation for this device')
 
 def set_device_colortemp(id, colortemp, transition):
     (device, api) = get_device_api(id)
 
-    if device.has_light_control and device.light_control.can_set_temp:
+    if device.has_light_control: # and device.light_control.can_set_temp:
         colortemp_value = get_colortemp_value(colortemp)
         transition_value = get_transition_value(transition)
         colortemp_command = device.light_control.set_color_temp(colortemp_value, transition_time=transition_value)

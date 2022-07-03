@@ -10,6 +10,7 @@ GET /devices/65545           # get single device information
 PUT /devices/65545/state/1   # turn device on
 PUT /devices/65545/state/0   # turn device off
 PUT /groups/131077/dimmer/60 # dim all lamps in group to 60%
+PUT /gateway/restart         # restart gateway
 ```
 
 Use **Swagger UI** to view all available endpoints.
@@ -73,13 +74,9 @@ curl -X GET --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2
 curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices/65545/state/1
 ```
 
-This token does never expire.
+This token does never expire, but keep in mind it's linked to your IKEA gateway
+IP, so using a static IP might be a good idea.
 
 # Known issues
 
-* Setting color value just defaults to a predefined color. Might need to switch to XY color in backend.
 * Setting dimmer value on a group will not turn on lights who already have that exact value since earlier. This works on individual devices.
-
-# Future features
-
-* Add option for none static tokens and sessions
