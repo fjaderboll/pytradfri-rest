@@ -16,7 +16,8 @@ PUT /gateway/restart         # restart gateway
 Use **Swagger UI** to view all available endpoints.
 
 ## Setup
-Below is tested on Raspbian (stretch) and LinuxMint (tessa), but should work in all similar environments.
+Below is tested on Raspbian (stretch) and Linux Mint 20.3 (Una),
+but should work in all similar environments.
 
 ### With docker
 Install Docker first if you haven't:
