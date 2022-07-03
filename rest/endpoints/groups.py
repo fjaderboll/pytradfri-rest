@@ -1,5 +1,5 @@
 
-from flask_restplus import Resource, fields
+from flask_restx import Resource, fields
 
 from api import api
 import tradfri

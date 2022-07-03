@@ -1,5 +1,5 @@
 
-from flask_restplus import Api
+from flask_restx import Api
 
 authorizations = {
     'default': {

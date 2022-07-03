@@ -12,6 +12,8 @@ PUT /devices/65545/state/0   # turn device off
 PUT /groups/131077/dimmer/60 # dim all lamps in group to 60%
 ```
 
+Use **Swagger UI** to view all available endpoints.
+
 ## Setup
 Below is tested on Raspbian (stretch) and LinuxMint (tessa), but should work in all similar environments.
 
@@ -77,7 +79,6 @@ This token does never expire.
 
 * Setting color value just defaults to a predefined color. Might need to switch to XY color in backend.
 * Setting dimmer value on a group will not turn on lights who already have that exact value since earlier. This works on individual devices.
-* Latest version of Werkzeug library has a compile issue. Once fixed remove `Werkzeug==0.16.1` from `requirements.txt`.
 
 # Future features
 

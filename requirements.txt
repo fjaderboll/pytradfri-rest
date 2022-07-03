@@ -1,3 +1,2 @@
-pytradfri==7.0.1
-flask-restplus==0.13.0
-Werkzeug==0.16.1
+pytradfri==11.0.0
+flask-restx==0.5.1
