@@ -123,9 +123,19 @@ def get_gateway_info():
         'firmwareVersion': gateway_info.firmware_version,
         'currentTime': str(gateway_info.current_time),
         'currentTimeIso8601': gateway_info.current_time_iso8601,
-        'firstSetup': str(gateway_info.first_setup),
-        'homekitId': gateway_info.homekit_id
+        'firstSetupTime': str(gateway_info.first_setup),
+        'homekitId': gateway_info.homekit_id,
+        'pairStatusGoogleHome': gateway_info.pair_status_google_home,
+        'pairStatusAlexa': gateway_info.pair_status_alexa
     }
+
+def restart_gateway():
+    (gateway, api) = get_gateway_api()
+
+    gateway_command = gateway.reboot()
+    gateway_restart = api(gateway_command)
+
+    return {}
 
 def get_devices():
     (gateway, api) = get_gateway_api()

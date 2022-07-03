@@ -25,3 +25,8 @@ class GatewayLogin(Resource):
     @ns.response(401, 'Unable to complete authentication')
     def post(self):
         return tradfri.login(api.payload)
+
+@ns.route('/restart')
+class GatewayRestart(Resource):
+    def put(self):
+        return tradfri.restart_gateway()
