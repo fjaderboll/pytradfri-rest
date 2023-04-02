@@ -81,3 +81,10 @@ IP, so using a static IP might be a good idea.
 # Known issues
 
 * Setting dimmer value on a group will not turn on lights who already have that exact value since earlier. This works on individual devices.
+
+# Upgrade requirements
+
+```shell
+pip3 install pip-upgrader
+pip-upgrade
+```
