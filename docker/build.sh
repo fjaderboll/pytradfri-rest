@@ -8,7 +8,7 @@ if [ "$1" = "-c" ]; then
 fi
 arch=$(uname -m)
 if [ "$arch" = "armv7l" ]; then
-    options="$options --build-arg imageName=arm32v7/python:3.10"
+    options="$options --build-arg imageName=arm32v7/python:3.11"
 fi
 
 mkdir -p tmp

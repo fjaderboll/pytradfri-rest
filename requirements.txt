@@ -1,2 +1,3 @@
-pytradfri==11.0.0
+pytradfri==13.0.0
+pydantic==1.10.19
 flask-restx==1.3.0

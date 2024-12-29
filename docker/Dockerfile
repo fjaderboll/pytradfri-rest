@@ -1,4 +1,4 @@
-ARG imageName=python:3.10-bullseye
+ARG imageName=python:3.11-bullseye
 FROM $imageName
 
 ENV LANG C.UTF-8
