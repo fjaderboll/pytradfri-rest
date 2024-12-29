@@ -46,6 +46,8 @@ Run:
 ```shell
 source .venv/bin/activate
 ./rest/rest.py 2080    # start server at http://localhost:2080/
+
+./test/test.py --help  # automatically test some of the endpoints
 ```
 
 ## Usage
