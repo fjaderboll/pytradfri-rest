@@ -18,4 +18,5 @@ for ((i = 0; i < n; ++i)); do
 done
 
 echo -n "$key" > "$crypt_key_file"
+chmod 600 "$crypt_key_file"
 echo "Created $crypt_key_file"
