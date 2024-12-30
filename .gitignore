@@ -1,3 +1,4 @@
 /.venv*/
 /docker/tmp/
+/rest/crypt.key
 __pycache__/

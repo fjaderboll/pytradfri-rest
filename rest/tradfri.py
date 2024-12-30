@@ -25,6 +25,8 @@ def get_gateway_api():
         token = auth.split(' ')[1]
         login_data = utils.decrypt(token)
         (host, identity, psk) = login_data.split(',')
+        if len(host) == 0 or len(identity) != 32 or not identity.isalnum() or len(psk) != 16 or not psk.isalnum():
+            raise Exception('Token probably created with another crypt key')
 
         api_factory = APIFactory(host=host, psk_id=identity, psk=psk)
         api = api_factory.request

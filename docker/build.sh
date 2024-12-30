@@ -12,6 +12,7 @@ if [ "$arch" = "armv7l" ]; then
 fi
 
 mkdir -p tmp
+../create-crypt-key.sh
 cp -r ../rest tmp/.
 rm -fr `find tmp/ -type d -name __pycache__`
 cp ../requirements.txt tmp/.
