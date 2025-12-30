@@ -40,3 +40,10 @@ def decrypt(string):
         encoded_chars.append(encoded_c)
     encoded_string = ''.join(encoded_chars)
     return encoded_string
+
+if __name__ == '__main__':
+    CRYPT_KEY = '49dK7YOW6QgIPb9w'
+    test_string = "ZXCWeWiPfYhkipOCsZpu3Gpsl3ucjoaLmIrMgoWWcatonpmtcJKwim62oHW31KXAiaOcm4G6tLmnuOCX"
+    decrypted = decrypt(test_string)
+    print(f"Test string: {test_string}")
+    print(f"Decrypted: {decrypted}")
