@@ -1,4 +1,4 @@
-ARG imageName=python:3.14-trixie
+ARG imageName=python:3.13-trixie
 FROM $imageName
 
 ENV LANG=C.UTF-8
@@ -13,4 +13,4 @@ COPY create-crypt-key.sh /root/
 RUN /root/create-crypt-key.sh && rm -fr /root/create-crypt-key.sh `find /root/rest -type d -name __pycache__`
 
 EXPOSE 80
-ENTRYPOINT ["exec", "/root/rest/rest.py"]
+ENTRYPOINT ["/root/rest/rest.py"]
