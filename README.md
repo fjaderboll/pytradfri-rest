@@ -2,6 +2,12 @@
 This is built on the [pytradfri](https://github.com/home-assistant-libs/pytradfri)
 project and adds a REST API for simpler usage of controlling your IKEA lights.
 
+> [!TIP]
+> If you're using the new *IKEA Dirigera Hub*
+> (which has Matter support), check out my other project
+> [matter-rest](https://github.com/fjaderboll/matter-rest).
+
+
 ## Examples
 ```shell
 GET /devices                 # retrieve all devices
