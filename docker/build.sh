@@ -11,10 +11,4 @@ if [ "$arch" = "armv7l" ]; then
     options="$options --build-arg imageName=arm32v7/python:3.11"
 fi
 
-mkdir -p tmp
-../create-crypt-key.sh
-cp -r ../rest tmp/.
-rm -fr `find tmp/ -type d -name __pycache__`
-cp ../requirements.txt tmp/.
-docker build ${options} -t pytradfri-rest .
-rm -r tmp
+docker build ${options} -t pytradfri-rest -f Dockerfile ..
