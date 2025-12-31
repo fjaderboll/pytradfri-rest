@@ -2,6 +2,8 @@
 This is built on the [pytradfri](https://github.com/home-assistant-libs/pytradfri)
 project and adds a REST API for simpler usage of controlling your IKEA lights.
 
+You'll need the *IKEA Trådfri gateway* connected on your local LAN.
+
 > [!TIP]
 > If you're using the new *IKEA Dirigera Hub*
 > (which has Matter support), check out my other project

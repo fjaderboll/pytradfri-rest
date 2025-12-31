@@ -1,12 +1,12 @@
-ARG imageName=python:3.13-trixie
+ARG imageName=python:3.11-bullseye
 FROM $imageName
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
-COPY requirements.txt docker/install-coap-client.sh docker/libcoap-4.1.2.zip /tmp/
+COPY requirements.txt docker/install-coap-client.sh /tmp/
 RUN pip3 install -r /tmp/requirements.txt && rm /tmp/requirements.txt
-RUN /tmp/install-coap-client.sh && rm /tmp/install-coap-client.sh /tmp/libcoap-4.1.2.zip
+RUN /tmp/install-coap-client.sh && rm /tmp/install-coap-client.sh
 
 COPY rest /root/rest
 COPY create-crypt-key.sh /root/
