@@ -9,11 +9,10 @@ You'll need the *IKEA Trådfri gateway* connected on your local LAN.
 > (which has Matter support), check out my other project
 > [matter-rest](https://github.com/fjaderboll/matter-rest).
 
-
 ## Examples
 ```shell
-GET /devices                 # retrieve all devices
-GET /groups                  # retrieve all groups
+GET /devices/                # retrieve all devices
+GET /groups/                 # retrieve all groups
 GET /devices/65545           # get single device information
 PUT /devices/65545/state/1   # turn device on
 PUT /devices/65545/state/0   # turn device off
@@ -55,7 +54,7 @@ The response will contain a authorization token:
 Use this in the header for all other requests, like this:
 
 ```shell
-curl -X GET --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices
+curl -X GET --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices/
 curl -X PUT --header 'authorization: Bearer ZXCWeWiPfYhki...' http://localhost:2080/devices/65545/state/1
 ```
 
